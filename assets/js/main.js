@@ -126,6 +126,8 @@
       document.body.classList.add('has-cursor');
     }, { passive: true });
     (function follow() {
+      // the perf governor may retire this layer mid-session
+      if (document.body.classList.contains('perf-low')) { if (glow) glow.remove(); return; }
       gx += (tx - gx) * 0.12;
       gy += (ty - gy) * 0.12;
       if (glow) glow.style.transform = 'translate3d(' + gx.toFixed(1) + 'px,' + gy.toFixed(1) + 'px,0)';
@@ -261,6 +263,20 @@
     } else {
       setTimeout(type, 900);
     }
+  }
+
+  /* ─────────────── pause off-screen decorative animation ───────────────
+     The hero wordmark sheen, the marquee and the SVG dash flows all repaint
+     (they are not compositor-only properties), so leaving them running while
+     scrolled past costs real frames on weaker GPUs. */
+  if ('IntersectionObserver' in window && !reduced) {
+    var animHosts = [$('.hero'), $('.marquee'), $('#projects')].filter(Boolean);
+    var animIO = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        en.target.classList.toggle('anim-off', !en.isIntersecting);
+      });
+    }, { rootMargin: '120px' });
+    animHosts.forEach(function (el) { animIO.observe(el); });
   }
 
   /* ─────────────── smooth in-page anchors (with nav offset) ─────────────── */

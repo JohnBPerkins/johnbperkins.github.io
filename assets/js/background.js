@@ -13,16 +13,24 @@
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) { canvas.style.display = 'none'; return; }
 
-  var gl = canvas.getContext('webgl', { antialias: false, alpha: true, depth: false, stencil: false })
-        || canvas.getContext('experimental-webgl');
+  var opts = {
+    antialias: false, alpha: true, depth: false, stencil: false,
+    powerPreference: 'low-power',
+    // if the only way to honour this context is a software rasteriser
+    // (SwiftShader / llvmpipe), fail instead — CPU-rendering fBm noise
+    // full-screen is what turns this page into a slideshow.
+    failIfMajorPerformanceCaveat: true
+  };
+  var gl = canvas.getContext('webgl', opts) || canvas.getContext('experimental-webgl', opts);
 
   if (!gl) { fallback(); return; }
 
+  // No usable GPU path: drop to a static CSS gradient. The node mesh and the
+  // rest of the motion stay, so the page still feels alive without asking the
+  // CPU to shade a full-screen noise field.
   function fallback() {
     canvas.style.display = 'none';
-    document.body.style.background =
-      'radial-gradient(120% 90% at 20% 10%, #0b1626 0%, #05060a 55%),' +
-      'radial-gradient(80% 70% at 85% 80%, #0a1a1a 0%, transparent 60%), #05060a';
+    document.documentElement.classList.add('no-gl');
   }
 
   var VERT = [
@@ -66,7 +74,7 @@
     'float fbm(vec2 p){',
     '  float v = 0.0, amp = 0.5;',
     '  mat2 rot = mat2(0.8, 0.6, -0.6, 0.8);',
-    '  for (int i = 0; i < 4; i++){',
+    '  for (int i = 0; i < 3; i++){',
     '    v += amp * snoise(p);',
     '    p = rot * p * 2.02;',
     '    amp *= 0.5;',
@@ -86,9 +94,10 @@
 
     /* two-stage domain warp: q warps into r, r warps the final field */
     '  vec2 q = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(5.2, 1.3) - t * 0.8));',
-    '  vec2 r = vec2(fbm(p + 1.7 * q + vec2(1.7, 9.2) + t * 0.45),',
-    '                fbm(p + 1.7 * q + vec2(8.3, 2.8) - t * 0.38));',
-    '  float f = fbm(p + 1.5 * r);',
+    '  float f = fbm(p + 1.7 * q + vec2(1.7, 9.2) + t * 0.45);',
+    // second warp stage derived from the first instead of sampling again:
+    // visually near-identical here, and two fewer fBm evaluations per pixel
+    '  vec2 r = q * 0.85 + vec2(f * 0.55, f * 0.38);',
 
     /* palette */
     '  vec3 base   = vec3(0.019, 0.023, 0.039);',
@@ -163,14 +172,18 @@
   var uScroll = gl.getUniformLocation(prog, 'u_scroll');
 
   var SCALE = 0.5;
+  var MIN_SCALE = 0.26;
+  var FRAME_MS = 1000 / 30;      // the field drifts slowly; 30fps is plenty
+  var lastDraw = 0;
+  var samples = [], lastAdjust = 0, warmup = 0;
   var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
   var scroll = 0, scrollTarget = 0;
   var running = true;
 
-  function resize() {
+  function resize(force) {
     var w = Math.max(1, Math.floor(window.innerWidth  * SCALE));
     var h = Math.max(1, Math.floor(window.innerHeight * SCALE));
-    if (canvas.width === w && canvas.height === h) return;
+    if (!force && canvas.width === w && canvas.height === h) return;
     canvas.width = w;
     canvas.height = h;
     gl.viewport(0, 0, w, h);
@@ -193,6 +206,24 @@
     if (running) { last = performance.now(); requestAnimationFrame(frame); }
   });
 
+  // If frames run long even at 30fps, the GPU is struggling with the noise —
+  // shrink the render target rather than dropping the effect. The field is
+  // low-frequency, so a smaller buffer upscales without visible loss.
+  function govern(now, dt) {
+    if (warmup < 30) { warmup++; return; }
+    samples.push(dt);
+    if (samples.length > 60) samples.shift();
+    if (samples.length < 60 || now - lastAdjust < 3000) return;
+
+    var med = samples.slice().sort(function (a, b) { return a - b; })[30];
+    window.__glPerf = { scale: +SCALE.toFixed(2), medianFrameMs: +med.toFixed(1) };
+    if (med > 40 && SCALE > MIN_SCALE) {
+      SCALE = Math.max(MIN_SCALE, SCALE * 0.72);
+      lastAdjust = now; samples.length = 0;
+      resize(true);
+    }
+  }
+
   var t0 = performance.now();
   var last = t0;
 
@@ -207,11 +238,15 @@
     mouse.y += (mouse.ty - mouse.y) * k * 0.55;
     scroll  += (scrollTarget - scroll) * k * 0.6;
 
-    gl.uniform2f(uRes, canvas.width, canvas.height);
-    gl.uniform1f(uTime, (now - t0) / 1000);
-    gl.uniform2f(uMouse, mouse.x, mouse.y);
-    gl.uniform1f(uScroll, scroll);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    if (now - lastDraw >= FRAME_MS) {
+      lastDraw = now;
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, (now - t0) / 1000);
+      gl.uniform2f(uMouse, mouse.x, mouse.y);
+      gl.uniform1f(uScroll, scroll);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      govern(now, dt);
+    }
 
     requestAnimationFrame(frame);
   }
