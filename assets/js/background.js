@@ -13,6 +13,10 @@
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if (reduced) { canvas.style.display = 'none'; return; }
 
+  // ?nogpu=1 forces the unaccelerated path, so the fallback can be reviewed
+  // on a machine that does have hardware acceleration.
+  if (/[?&]nogpu=1\b/.test(location.search)) { markNoGpu(null); fallback(); return; }
+
   var opts = {
     antialias: false, alpha: true, depth: false, stencil: false,
     powerPreference: 'low-power',
@@ -23,11 +27,46 @@
   };
   var gl = canvas.getContext('webgl', opts) || canvas.getContext('experimental-webgl', opts);
 
-  if (!gl) { fallback(); return; }
+  // Distinguish "no WebGL at all" from "WebGL, but software-rendered".
+  // The second case means hardware acceleration is off browser-wide, so the
+  // 2D mesh canvas and every composited layer are on the CPU too — the whole
+  // page has to go static, not just this shader.
+  if (!gl) {
+    var soft = { antialias: false, alpha: false, depth: false, stencil: false };
+    var probe = null;
+    try {
+      probe = canvas.getContext('webgl', soft) || canvas.getContext('experimental-webgl', soft);
+    } catch (e) { probe = null; }
+    if (probe) markNoGpu(probe);
+    fallback();
+    return;
+  }
 
-  // No usable GPU path: drop to a static CSS gradient. The node mesh and the
-  // rest of the motion stay, so the page still feels alive without asking the
-  // CPU to shade a full-screen noise field.
+  // The caveat flag is not honoured everywhere; confirm against the driver string.
+  if (isSoftwareRenderer(gl)) { markNoGpu(gl); fallback(); return; }
+
+  function isSoftwareRenderer(ctx) {
+    try {
+      var dbg = ctx.getExtension('WEBGL_debug_renderer_info');
+      if (!dbg) return false;
+      var r = String(ctx.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+      return /swiftshader|llvmpipe|software|basic render|softpipe|mesa offscreen/.test(r);
+    } catch (e) { return false; }
+  }
+
+  // Hardware acceleration is off. Everything downstream reads this flag and
+  // goes static: no mesh animation, no per-frame canvas work, no hover physics.
+  function markNoGpu(ctx) {
+    window.__noGpu = true;
+    document.documentElement.classList.add('no-gpu');
+    if (!ctx) return;
+    try {
+      var lose = ctx.getExtension('WEBGL_lose_context');
+      if (lose) lose.loseContext();
+    } catch (e) {}
+  }
+
+  // No usable GPU path: drop to a static CSS gradient.
   function fallback() {
     canvas.style.display = 'none';
     document.documentElement.classList.add('no-gl');

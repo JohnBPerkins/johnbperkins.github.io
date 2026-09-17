@@ -9,6 +9,9 @@
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // set by background.js when the browser is rasterising on the CPU
+  var noGpu = !!window.__noGpu;
+  var lowGfx = reduced || noGpu;
   var $  = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
@@ -117,26 +120,8 @@
     sections.forEach(function (s) { spy.observe(s); });
   }
 
-  /* ─────────────── cursor glow ─────────────── */
-  if (finePointer && !reduced) {
-    var glow = $('.cursor-glow');
-    var gx = window.innerWidth / 2, gy = window.innerHeight / 2, tx = gx, ty = gy;
-    window.addEventListener('pointermove', function (e) {
-      tx = e.clientX; ty = e.clientY;
-      document.body.classList.add('has-cursor');
-    }, { passive: true });
-    (function follow() {
-      // the perf governor may retire this layer mid-session
-      if (document.body.classList.contains('perf-low')) { if (glow) glow.remove(); return; }
-      gx += (tx - gx) * 0.12;
-      gy += (ty - gy) * 0.12;
-      if (glow) glow.style.transform = 'translate3d(' + gx.toFixed(1) + 'px,' + gy.toFixed(1) + 'px,0)';
-      requestAnimationFrame(follow);
-    })();
-  }
-
   /* ─────────────── spotlight + tilt ─────────────── */
-  if (finePointer && !reduced) {
+  if (finePointer && !lowGfx) {
     $$('.card, .pillar').forEach(function (el) {
       el.addEventListener('pointermove', function (e) {
         var r = el.getBoundingClientRect();
@@ -253,7 +238,7 @@
       setTimeout(type, text.length > 30 ? 11 : 20);
     }
 
-    if (reduced) {
+    if (lowGfx) {
       out = SCENE.map(function (line) {
         return line.map(function (s) {
           return '<span class="t-' + s[1] + '">' + esc(s[0]) + '</span>';
@@ -269,7 +254,7 @@
      The hero wordmark sheen, the marquee and the SVG dash flows all repaint
      (they are not compositor-only properties), so leaving them running while
      scrolled past costs real frames on weaker GPUs. */
-  if ('IntersectionObserver' in window && !reduced) {
+  if ('IntersectionObserver' in window && !lowGfx) {
     var animHosts = [$('.hero'), $('.marquee'), $('#projects')].filter(Boolean);
     var animIO = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {

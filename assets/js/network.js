@@ -30,8 +30,13 @@
     { density: 30000, max: 55, link: 165, dprCap: 1,    halos: true,  pulses: 40 },
     { density: 50000, max: 34, link: 145, dprCap: 1,    halos: false, pulses: 22 }
   ];
+  // background.js probes the GPU first (both scripts are deferred, in order).
+  // With hardware acceleration off, every clearRect and stroke here runs on the
+  // CPU — so the mesh is painted exactly once and then left alone.
+  var STATIC = !!window.__noGpu;
+
   var cores = navigator.hardwareConcurrency || 4;
-  var tier = cores <= 2 ? 2 : (cores <= 4 ? 1 : 0);
+  var tier = STATIC ? 2 : (cores <= 2 ? 2 : (cores <= 4 ? 1 : 0));
   var T = TIERS[tier];
 
   var W = 0, H = 0, dpr = 1;
@@ -394,21 +399,35 @@
   var resizeTimer = null;
   window.addEventListener('resize', function () {
     clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(function () { if (!disabled) resize(); }, 150);
+    resizeTimer = setTimeout(function () {
+      if (disabled) return;
+      resize();
+      if (STATIC) { linkPass(); draw(); }
+    }, 150);
   }, { passive: true });
 
-  window.addEventListener('pointermove', function (e) {
-    mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
-  }, { passive: true });
-  window.addEventListener('pointerleave', function () { mouse.active = false; }, { passive: true });
+  if (!STATIC) {
+    window.addEventListener('pointermove', function (e) {
+      mouse.x = e.clientX; mouse.y = e.clientY; mouse.active = true;
+    }, { passive: true });
+    window.addEventListener('pointerleave', function () { mouse.active = false; }, { passive: true });
 
-  document.addEventListener('visibilitychange', function () {
-    running = !document.hidden;
-    if (running && !disabled) { last = performance.now(); warmup = 0; requestAnimationFrame(loop); }
-  });
+    document.addEventListener('visibilitychange', function () {
+      running = !document.hidden;
+      if (running && !disabled) { last = performance.now(); warmup = 0; requestAnimationFrame(loop); }
+    });
+  }
 
   resize();
   linkPass();
-  for (var s0 = 0; s0 < 6; s0++) seed();
-  requestAnimationFrame(loop);
+
+  if (STATIC) {
+    // one frame, no loop: the mesh becomes a still texture
+    canvas.style.opacity = '.5';
+    draw();
+    window.__meshPerf = { tier: tier, static: true, nodes: nodes.length };
+  } else {
+    for (var s0 = 0; s0 < 6; s0++) seed();
+    requestAnimationFrame(loop);
+  }
 })();

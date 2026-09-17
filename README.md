@@ -38,6 +38,26 @@ on weak GPUs — not just on Apple silicon.
 - **`failIfMajorPerformanceCaveat`** — if the browser would only serve WebGL through
   a software rasteriser (SwiftShader/llvmpipe), the shader is skipped entirely and a
   static CSS gradient stands in.
+
+### No hardware acceleration
+
+If Chrome's hardware acceleration is switched off, *everything* rasterises on the CPU —
+the 2D mesh canvas and every composited layer, not just WebGL. Skipping the shader alone
+is not enough, so the page detects this (software renderer string, or a WebGL context that
+only succeeds without `failIfMajorPerformanceCaveat`) and goes fully static:
+
+- `html.no-gpu` is set, and `window.__noGpu` is exposed
+- the shader is replaced by a CSS gradient
+- the node mesh paints **one** frame and never loops again
+- every infinite animation stops (wordmark sheen, marquee, SVG dash flows, pulses)
+- the agent trace renders complete instead of typing
+- card tilt, spotlights and hover transforms are dropped
+
+Preview that path on any machine with **`?nogpu=1`**:
+
+```
+https://johnbperkins.github.io/?nogpu=1
+```
 - **Runtime governors** watch real frame times and step quality down, adding
   `body.perf-low` and ultimately retiring the mesh layer.
 - Decorative animations pause via IntersectionObserver when their section scrolls

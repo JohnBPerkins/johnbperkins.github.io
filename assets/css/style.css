@@ -73,15 +73,6 @@ a{color:inherit;text-decoration:none}
     rgba(5,6,10,.4);
 }
 
-.cursor-glow{
-  position:fixed;top:0;left:0;width:420px;height:420px;margin:-210px 0 0 -210px;
-  border-radius:50%;pointer-events:none;z-index:1;opacity:0;
-  background:radial-gradient(circle,rgba(94,231,196,.13),rgba(108,140,255,.07) 42%,transparent 68%);
-  transition:opacity .5s var(--ease);
-  will-change:transform;
-}
-body.has-cursor .cursor-glow{opacity:1}
-
 .scroll-rail{position:fixed;top:0;left:0;right:0;height:2px;z-index:80;background:transparent}
 .scroll-rail span{
   display:block;height:100%;width:0%;
@@ -561,8 +552,37 @@ main,.footer,.nav{position:relative;z-index:2}
 
 .anim-off *,.anim-off{animation-play-state:paused!important}
 
+/* ══════════════ no hardware acceleration ══════════════
+   Chrome is compositing and rasterising on the CPU, so anything that repaints
+   per frame is unaffordable regardless of how cheap it is on a GPU. Everything
+   below becomes a still image; layout, type and colour are unchanged. */
+.no-gpu .bg-grain{display:none}
+.no-gpu .bg-grid{-webkit-mask-image:none;mask-image:none;opacity:.35}
+.no-gpu .nav.is-stuck{
+  backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(5,6,10,.95);
+}
+.no-gpu .hero__name .word{
+  animation:none;
+  background:linear-gradient(130deg,#ffffff 0%,#dfe7f7 34%,var(--mint) 70%,var(--blue) 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.no-gpu .status__dot::after,
+.no-gpu .panel__live i,
+.no-gpu .panel__body .caret,
+.no-gpu .hero__scroll span,
+.no-gpu .marquee__track,
+.no-gpu .proj__viz .flow,
+.no-gpu .btn--solid::after{animation:none}
+.no-gpu .panel__body .caret{opacity:.55}
+.no-gpu .proj__viz .flow{stroke-dasharray:none;opacity:.55}
+.no-gpu .card,.no-gpu .pillar,.no-gpu .edu__item,.no-gpu .btn,.no-gpu .stack__col li{
+  transition-duration:.12s;
+}
+.no-gpu .card:hover,.no-gpu .pillar:hover,.no-gpu .edu__item:hover{transform:none}
+.no-gpu .reveal{transition-duration:.35s!important}
+
 /* static stand-in when WebGL is unavailable or would run in software */
-.no-gl .bg-stack::before{
+.no-gl .bg-stack::before,.no-gpu .bg-stack::before{
   content:"";position:absolute;inset:0;
   background:
     radial-gradient(120% 85% at 18% 8%,#101c33 0%,transparent 55%),
@@ -576,7 +596,6 @@ body.perf-low .nav.is-stuck{
   backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(5,6,10,.94);
 }
 body.perf-low .bg-grain{display:none}
-body.perf-low .cursor-glow{display:none}
 body.perf-low .btn--solid::after{display:none}
 body.perf-low .marquee__track{animation:none}
 body.perf-low .proj__viz .flow{animation:none}
@@ -599,7 +618,6 @@ body.perf-low .proj__viz .flow{animation:none}
   .panel__body{min-height:240px;font-size:.7rem}
   .footer{justify-content:center;text-align:center}
   .footer__mid{display:none}
-  .cursor-glow{display:none}
 }
 
 @media (prefers-reduced-motion:reduce){
