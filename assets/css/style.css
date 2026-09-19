@@ -136,15 +136,16 @@ main,.foot,.nav{position:relative;z-index:2}
 }
 .thesis em{font-style:normal;color:var(--accent)}
 
-.hero__meta{
+/* shared by the hero and the contact section */
+.meta{
   display:grid;grid-template-columns:1fr 1fr 1.35fr;gap:0;
   border-top:1px solid var(--line);
 }
-.hero__cell{padding:1.25rem 1.5rem 1.4rem 0;border-right:1px solid var(--line-2)}
-.hero__cell:last-child{border-right:0}
-.hero__cell--wide{padding-right:0}
-.hero__cell p{margin:.6rem 0 0;font-size:.92rem;line-height:1.6;color:var(--ink-2)}
-.hero__cell--wide p{color:var(--ink)}
+.meta__cell{padding:1.25rem 1.5rem 1.4rem 0;border-right:1px solid var(--line-2)}
+.meta__cell:last-child{border-right:0}
+.meta__cell--wide{padding-right:0}
+.meta__cell p{margin:.6rem 0 0;font-size:.92rem;line-height:1.6;color:var(--ink-2)}
+.meta__cell--wide p{color:var(--ink)}
 
 .hero__actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:clamp(1.7rem,3.2vw,2.4rem)}
 .lnk{
@@ -337,14 +338,32 @@ main,.foot,.nav{position:relative;z-index:2}
 .edu__row p span{display:block;color:var(--ink-3);font-size:.82rem;margin-top:.2rem}
 
 /* ══════════════ contact ══════════════ */
+.contact__mail{
+  display:flex;align-items:flex-end;flex-wrap:wrap;gap:.9rem 1.2rem;
+  margin-bottom:1.1rem;
+}
 .mailto{
   display:block;font-family:var(--f-display);font-weight:700;
   font-size:clamp(1.5rem,6.2vw,4.6rem);line-height:1;letter-spacing:-.04em;
-  word-break:break-word;margin-bottom:clamp(2.5rem,5vw,3.5rem);
-  transition:color .3s;
+  word-break:break-word;transition:color .3s;
 }
 .mailto:hover{color:var(--accent)}
-.contact__links{list-style:none;display:flex;flex-wrap:wrap;gap:2rem;margin:0;padding:0}
+/* mailto: opens nothing for a lot of people on desktop, so give them the
+   string directly rather than making them select 25 characters of huge type */
+.copy{
+  flex:none;margin-bottom:.35rem;cursor:pointer;
+  font-family:var(--f-mono);font-size:.68rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);
+  background:none;border:1px solid var(--line);padding:.45rem .7rem;
+  transition:color .25s,border-color .25s,background .25s;
+}
+.copy:hover{color:var(--accent);border-color:var(--accent)}
+.copy.is-done{color:#0a0c05;background:var(--accent);border-color:var(--accent)}
+.contact__ask{
+  margin:0 0 clamp(2.4rem,5vw,3.4rem);
+  font-size:.95rem;color:var(--ink-2);max-width:52ch;
+}
+.contact__links{list-style:none;display:flex;flex-wrap:wrap;gap:2rem;margin:clamp(2.2rem,4.5vw,3rem) 0 0;padding:0}
 .contact__links a{
   font-family:var(--f-mono);font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;
   color:var(--ink-3);transition:color .25s;
@@ -389,8 +408,8 @@ main,.foot,.nav{position:relative;z-index:2}
 /* ══════════════ responsive ══════════════ */
 @media (max-width:1080px){
   .nav__links{display:none}
-  .hero__meta{grid-template-columns:1fr 1fr}
-  .hero__cell--wide{grid-column:span 2;border-right:0}
+  .meta{grid-template-columns:1fr 1fr}
+  .meta__cell--wide{grid-column:span 2;border-right:0}
   .logos li{font-size:.85rem}
   .work__row{grid-template-columns:8rem 1fr;gap:1.2rem}
   .work__body{grid-column:2}
@@ -405,9 +424,9 @@ main,.foot,.nav{position:relative;z-index:2}
   .band__item,.build{border-right:0;border-bottom:1px solid var(--line-2);padding-right:0}
   .build:last-child{padding-left:0}
   .stack{grid-template-columns:repeat(2,1fr)}
-  .hero__meta{grid-template-columns:1fr}
-  .hero__cell{border-right:0;border-bottom:1px solid var(--line-2)}
-  .hero__cell--wide{grid-column:span 1}
+  .meta{grid-template-columns:1fr}
+  .meta__cell{border-right:0;border-bottom:1px solid var(--line-2)}
+  .meta__cell--wide{grid-column:span 1}
   .logos ul{gap:.9rem 1.5rem;justify-content:flex-start}
   .work__row,.edu__row{grid-template-columns:1fr;gap:.9rem}
   .work__body,.caps__row p{grid-column:1}

@@ -106,6 +106,40 @@
     secs.forEach(function (s) { spy.observe(s); });
   }
 
+  /* ── copy-to-clipboard on the email ── */
+  $$('.copy[data-copy]').forEach(function (btn) {
+    var original = btn.textContent;
+    var timer = null;
+    btn.addEventListener('click', function () {
+      var text = btn.dataset.copy;
+      var done = function () {
+        btn.textContent = 'copied';
+        btn.classList.add('is-done');
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+          btn.textContent = original;
+          btn.classList.remove('is-done');
+        }, 2000);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, fallback);
+      } else {
+        fallback();
+      }
+      // clipboard API needs a secure context; plain http and older browsers land here
+      function fallback() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:absolute;left:-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); done(); } catch (e) {}
+        document.body.removeChild(ta);
+      }
+    });
+  });
+
   /* ── anchors with nav offset ── */
   $$('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
