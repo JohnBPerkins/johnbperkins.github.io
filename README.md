@@ -10,7 +10,7 @@ assets/js/background.js    WebGL ordered-dither field
 assets/js/main.js          reveals, rail, nav, scroll-spy, count-ups
 assets/og.png              1200x630 social preview card
 assets/logos/              credibility-bar marks (see its README)
-assets/files/              résumé PDF
+assets/files/              resume PDF
 ```
 
 No frameworks, no dependencies, no build. Edit a file and push.

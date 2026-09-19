@@ -2,3 +2,8 @@
 
 # local design comparison copy — delete this line to publish it too
 preview/
+
+# source material, not part of the published site
+linkedin.txt
+John_Perkins_Resume*.pdf
+!assets/files/John_Perkins_Resume.pdf
