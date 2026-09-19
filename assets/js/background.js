@@ -1,8 +1,18 @@
 /* ═══════════════════════════════════════════════════════════════
-   background.js — WebGL aurora field
-   Domain-warped fBm noise, mouse-reactive, scroll-drifting.
-   Renders at half resolution and lets the GPU upscale: the field
-   is low-frequency, so the interpolation is free smoothing.
+   background.js — ordered-dither field
+
+   A slow flowing light field, quantised to a handful of tones
+   through an 8×8 Bayer matrix. No smooth gradients, no blur: every
+   pixel is one of N palette steps, and the illusion of tone comes
+   entirely from the dot pattern — the way newsprint does it.
+
+   Two decisions keep it crisp rather than mushy:
+     · the canvas renders at CSS resolution (not devicePixelRatio)
+       and is upscaled by the compositor with image-rendering:
+       pixelated, so one dither cell stays a hard square
+     · the field is sampled at the CENTRE of each cell, so a cell is
+       a single flat value — sampling per pixel would reintroduce
+       the gradient the dithering is supposed to replace
    ═══════════════════════════════════════════════════════════════ */
 (function () {
   'use strict';
@@ -11,193 +21,158 @@
   if (!canvas) return;
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduced) { canvas.style.display = 'none'; return; }
-
-  // ?nogpu=1 forces the unaccelerated path, so the fallback can be reviewed
-  // on a machine that does have hardware acceleration.
+  if (reduced) { canvas.style.display = 'none'; document.documentElement.classList.add('no-gl'); return; }
   if (/[?&]nogpu=1\b/.test(location.search)) { markNoGpu(null); fallback(); return; }
 
   var opts = {
-    antialias: false, alpha: true, depth: false, stencil: false,
-    powerPreference: 'low-power',
-    // if the only way to honour this context is a software rasteriser
-    // (SwiftShader / llvmpipe), fail instead — CPU-rendering fBm noise
-    // full-screen is what turns this page into a slideshow.
-    failIfMajorPerformanceCaveat: true
+    antialias: false, alpha: false, depth: false, stencil: false,
+    powerPreference: 'low-power', failIfMajorPerformanceCaveat: true
   };
   var gl = canvas.getContext('webgl', opts) || canvas.getContext('experimental-webgl', opts);
 
-  // Distinguish "no WebGL at all" from "WebGL, but software-rendered".
-  // The second case means hardware acceleration is off browser-wide, so the
-  // 2D mesh canvas and every composited layer are on the CPU too — the whole
-  // page has to go static, not just this shader.
   if (!gl) {
     var soft = { antialias: false, alpha: false, depth: false, stencil: false };
     var probe = null;
-    try {
-      probe = canvas.getContext('webgl', soft) || canvas.getContext('experimental-webgl', soft);
-    } catch (e) { probe = null; }
+    try { probe = canvas.getContext('webgl', soft) || canvas.getContext('experimental-webgl', soft); }
+    catch (e) { probe = null; }
     if (probe) markNoGpu(probe);
     fallback();
     return;
   }
+  if (isSoftware(gl)) { markNoGpu(gl); fallback(); return; }
 
-  // The caveat flag is not honoured everywhere; confirm against the driver string.
-  if (isSoftwareRenderer(gl)) { markNoGpu(gl); fallback(); return; }
-
-  function isSoftwareRenderer(ctx) {
+  function isSoftware(ctx) {
     try {
-      var dbg = ctx.getExtension('WEBGL_debug_renderer_info');
-      if (!dbg) return false;
-      var r = String(ctx.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
+      var d = ctx.getExtension('WEBGL_debug_renderer_info');
+      if (!d) return false;
+      var r = String(ctx.getParameter(d.UNMASKED_RENDERER_WEBGL) || '').toLowerCase();
       return /swiftshader|llvmpipe|software|basic render|softpipe|mesa offscreen/.test(r);
     } catch (e) { return false; }
   }
-
-  // Hardware acceleration is off. Everything downstream reads this flag and
-  // goes static: no mesh animation, no per-frame canvas work, no hover physics.
   function markNoGpu(ctx) {
     window.__noGpu = true;
     document.documentElement.classList.add('no-gpu');
     if (!ctx) return;
-    try {
-      var lose = ctx.getExtension('WEBGL_lose_context');
-      if (lose) lose.loseContext();
-    } catch (e) {}
+    try { var l = ctx.getExtension('WEBGL_lose_context'); if (l) l.loseContext(); } catch (e) {}
+  }
+  function fallback() { canvas.style.display = 'none'; document.documentElement.classList.add('no-gl'); }
+
+  /* ── palette: the only colours the field can ever be ─────────── */
+  var RAMP = ['#07080b', '#0b1410', '#15291a', '#3c6b24', '#d8ff54'];
+  var LEVELS = 5;
+  var CELL = 3;
+
+  function hex(h) {
+    h = h.replace('#', '');
+    return [parseInt(h.slice(0, 2), 16) / 255,
+            parseInt(h.slice(2, 4), 16) / 255,
+            parseInt(h.slice(4, 6), 16) / 255];
   }
 
-  // No usable GPU path: drop to a static CSS gradient.
-  function fallback() {
-    canvas.style.display = 'none';
-    document.documentElement.classList.add('no-gl');
-  }
-
-  var VERT = [
-    'attribute vec2 a_pos;',
-    'void main(){ gl_Position = vec4(a_pos, 0.0, 1.0); }'
-  ].join('\n');
+  var VERT = 'attribute vec2 a_pos; void main(){ gl_Position = vec4(a_pos,0.0,1.0); }';
 
   var FRAG = [
     'precision highp float;',
     'uniform vec2  u_res;',
     'uniform float u_time;',
     'uniform vec2  u_mouse;',
-    'uniform float u_scroll;',
+    'uniform float u_cell;',
+    'uniform float u_levels;',
+    'uniform vec3  u_ramp[5];',
 
-    /* --- Ashima 2D simplex noise --- */
-    'vec3 mod289(vec3 x){ return x - floor(x * (1.0/289.0)) * 289.0; }',
-    'vec2 mod289(vec2 x){ return x - floor(x * (1.0/289.0)) * 289.0; }',
-    'vec3 permute(vec3 x){ return mod289(((x*34.0)+1.0)*x); }',
+    /* Ashima 2D simplex */
+    'vec3 mod289(vec3 x){return x-floor(x*(1.0/289.0))*289.0;}',
+    'vec2 mod289(vec2 x){return x-floor(x*(1.0/289.0))*289.0;}',
+    'vec3 permute(vec3 x){return mod289(((x*34.0)+1.0)*x);}',
     'float snoise(vec2 v){',
-    '  const vec4 C = vec4(0.211324865, 0.366025404, -0.577350269, 0.024390244);',
-    '  vec2 i  = floor(v + dot(v, C.yy));',
-    '  vec2 x0 = v - i + dot(i, C.xx);',
-    '  vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);',
-    '  vec4 x12 = x0.xyxy + C.xxzz; x12.xy -= i1;',
-    '  i = mod289(i);',
-    '  vec3 p = permute( permute( i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));',
-    '  vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);',
-    '  m = m*m; m = m*m;',
-    '  vec3 x = 2.0 * fract(p * C.www) - 1.0;',
-    '  vec3 h = abs(x) - 0.5;',
-    '  vec3 ox = floor(x + 0.5);',
-    '  vec3 a0 = x - ox;',
-    '  m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);',
-    '  vec3 g;',
-    '  g.x  = a0.x  * x0.x  + h.x  * x0.y;',
-    '  g.yz = a0.yz * x12.xz + h.yz * x12.yw;',
-    '  return 130.0 * dot(m, g);',
+    '  const vec4 C = vec4(0.211324865,0.366025404,-0.577350269,0.024390244);',
+    '  vec2 i=floor(v+dot(v,C.yy)); vec2 x0=v-i+dot(i,C.xx);',
+    '  vec2 i1=(x0.x>x0.y)?vec2(1.0,0.0):vec2(0.0,1.0);',
+    '  vec4 x12=x0.xyxy+C.xxzz; x12.xy-=i1; i=mod289(i);',
+    '  vec3 p=permute(permute(i.y+vec3(0.0,i1.y,1.0))+i.x+vec3(0.0,i1.x,1.0));',
+    '  vec3 m=max(0.5-vec3(dot(x0,x0),dot(x12.xy,x12.xy),dot(x12.zw,x12.zw)),0.0);',
+    '  m=m*m; m=m*m;',
+    '  vec3 x=2.0*fract(p*C.www)-1.0; vec3 h=abs(x)-0.5;',
+    '  vec3 ox=floor(x+0.5); vec3 a0=x-ox;',
+    '  m*=1.79284291400159-0.85373472095314*(a0*a0+h*h);',
+    '  vec3 g; g.x=a0.x*x0.x+h.x*x0.y; g.yz=a0.yz*x12.xz+h.yz*x12.yw;',
+    '  return 130.0*dot(m,g);',
     '}',
-
-    /* --- fBm over 5 octaves --- */
     'float fbm(vec2 p){',
-    '  float v = 0.0, amp = 0.5;',
-    '  mat2 rot = mat2(0.8, 0.6, -0.6, 0.8);',
-    '  for (int i = 0; i < 3; i++){',
-    '    v += amp * snoise(p);',
-    '    p = rot * p * 2.02;',
-    '    amp *= 0.5;',
-    '  }',
+    '  float v=0.0, a=0.5;',
+    '  mat2 r=mat2(0.8,0.6,-0.6,0.8);',
+    '  for(int i=0;i<4;i++){ v+=a*snoise(p); p=r*p*2.03; a*=0.5; }',
     '  return v;',
     '}',
 
-    'float hash(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }',
+    /* compact Bayer 8×8 — the classic bit-interleave form */
+    'float bayer2(vec2 a){ a=floor(a); return fract(a.x*0.5 + a.y*a.y*0.75); }',
+    'float bayer4(vec2 a){ return bayer2(0.5*a)*0.25 + bayer2(a); }',
+    'float bayer8(vec2 a){ return bayer4(0.5*a)*0.25 + bayer2(a); }',
+
+    'vec3 rampColor(float q){',
+    '  float s = q * (u_levels - 1.0);',
+    '  int i = int(floor(s + 0.5));',
+    '  if (i <= 0) return u_ramp[0];',
+    '  if (i == 1) return u_ramp[1];',
+    '  if (i == 2) return u_ramp[2];',
+    '  if (i == 3) return u_ramp[3];',
+    '  return u_ramp[4];',
+    '}',
 
     'void main(){',
-    '  vec2 uv = gl_FragCoord.xy / u_res.xy;',
-    '  vec2 p  = (gl_FragCoord.xy - 0.5 * u_res.xy) / u_res.y;',
-    '  p *= 0.78;',
-    '  p.y += u_scroll * 0.55;',
+    '  vec2 cell = floor(gl_FragCoord.xy / u_cell);',
+    '  vec2 cpx  = cell * u_cell + u_cell * 0.5;',      // cell centre, in pixels
+    '  vec2 uv   = cpx / u_res;',
+    '  vec2 p    = (uv - 0.5) * vec2(u_res.x / u_res.y, 1.0);',
 
-    '  float t = u_time * 0.035;',
+    '  float t = u_time * 0.055;',
 
-    /* two-stage domain warp: q warps into r, r warps the final field */
-    '  vec2 q = vec2(fbm(p + vec2(0.0, t)), fbm(p + vec2(5.2, 1.3) - t * 0.8));',
-    '  float f = fbm(p + 1.7 * q + vec2(1.7, 9.2) + t * 0.45);',
-    // second warp stage derived from the first instead of sampling again:
-    // visually near-identical here, and two fewer fBm evaluations per pixel
-    '  vec2 r = q * 0.85 + vec2(f * 0.55, f * 0.38);',
+    /* gentle warp — enough to keep the falloff from looking like a plain
+       radial, not so much that it turns into blobs */
+    '  vec2 q = vec2(fbm(p * 0.95 + vec2(0.0, t * 0.6)),',
+    '                fbm(p * 0.95 + vec2(3.1, 1.7) - t * 0.45));',
+    '  float n = fbm(p * 1.1 + q * 0.8 + t * 0.3);',
 
-    /* palette */
-    '  vec3 base   = vec3(0.019, 0.023, 0.039);',
-    '  vec3 indigo = vec3(0.075, 0.115, 0.255);',
-    '  vec3 mint   = vec3(0.145, 0.560, 0.470);',
-    '  vec3 blue   = vec3(0.235, 0.330, 0.720);',
-    '  vec3 amber  = vec3(0.420, 0.250, 0.170);',
+    /* one broad light source, off the top-left. Dithering reads as design
+       rather than noise when the tone falls off cleanly from a single source */
+    '  vec2 lp = vec2(-0.62, 0.34) + u_mouse * 0.14',
+    '          + vec2(sin(t * 0.19) * 0.06, cos(t * 0.15) * 0.045);',
+    '  float d = length((p - lp) * vec2(0.78, 1.0));',
+    '  float light = 1.0 - smoothstep(0.0, 1.55, d);',
 
-    '  vec3 col = base;',
-    '  col = mix(col, indigo, smoothstep(-0.95, 1.25, f) * 0.80);',
-    '  col = mix(col, blue,   smoothstep(0.15, 1.45, length(r)) * 0.26);',
-    '  col = mix(col, mint,   smoothstep(0.45, 1.65, q.x + f * 0.5) * 0.20);',
-    '  col = mix(col, amber,  smoothstep(1.00, 1.90, r.y + q.y) * 0.07);',
+    '  float v = light * 0.98 + n * 0.14;',
+    '  v *= 1.0 - smoothstep(0.30, 1.0, uv.y) * 0.62;',   // settle toward the bottom
+    '  v = clamp(v, 0.0, 1.0);',
+    /* push the mid-tones down so the bright end stays rare and the page
+       reads as near-black with a dense core, not a field of green */
+    '  v = pow(v, 2.1);',
 
-    /* filament highlights: thin ridges where the warp folds, kept faint */
-    '  float ridge = 1.0 - abs(f);',
-    '  ridge = pow(clamp(ridge, 0.0, 1.0), 16.0);',
-    '  col += ridge * vec3(0.30, 0.62, 0.55) * 0.16;',
+    /* ordered dithering: threshold shifts per cell, so a flat value
+       resolves into a dot pattern instead of a banded block */
+    '  float b = bayer8(cell);',
+    '  float q2 = floor(v * (u_levels - 1.0) + b) / (u_levels - 1.0);',
+    '  q2 = clamp(q2, 0.0, 1.0);',
 
-    /* cursor bloom */
-    '  vec2 m = (u_mouse - 0.5 * u_res.xy) / u_res.y;',
-    '  float d = length(p - m * 1.35);',
-    '  col += exp(-d * 2.4) * vec3(0.10, 0.26, 0.24) * 0.50;',
-
-    /* horizon glow near the top, fade to black at the bottom */
-    '  col += vec3(0.05, 0.08, 0.18) * pow(1.0 - uv.y, 3.0) * 0.55;',
-    '  col *= smoothstep(-0.25, 0.55, uv.y * 1.25);',
-
-    /* vignette + dither to kill banding on dark gradients */
-    '  float vig = smoothstep(1.28, 0.30, length((uv - 0.5) * vec2(1.25, 1.0)));',
-    '  col *= mix(0.42, 1.0, vig);',
-    '  col *= 0.72;',
-    '  col += (hash(gl_FragCoord.xy + fract(u_time)) - 0.5) / 255.0;',
-
-    '  gl_FragColor = vec4(col, 1.0);',
+    '  gl_FragColor = vec4(rampColor(q2), 1.0);',
     '}'
   ].join('\n');
 
   function compile(type, src) {
     var s = gl.createShader(type);
-    gl.shaderSource(s, src);
-    gl.compileShader(s);
+    gl.shaderSource(s, src); gl.compileShader(s);
     if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-      console.warn('shader:', gl.getShaderInfoLog(s));
-      return null;
+      console.warn('[bg]', gl.getShaderInfoLog(s)); return null;
     }
     return s;
   }
-
-  var vs = compile(gl.VERTEX_SHADER, VERT);
-  var fs = compile(gl.FRAGMENT_SHADER, FRAG);
+  var vs = compile(gl.VERTEX_SHADER, VERT), fs = compile(gl.FRAGMENT_SHADER, FRAG);
   if (!vs || !fs) { fallback(); return; }
-
   var prog = gl.createProgram();
-  gl.attachShader(prog, vs);
-  gl.attachShader(prog, fs);
-  gl.linkProgram(prog);
+  gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { fallback(); return; }
   gl.useProgram(prog);
 
-  // full-screen triangle
   var buf = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, buf);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
@@ -205,39 +180,43 @@
   gl.enableVertexAttribArray(loc);
   gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
 
-  var uRes    = gl.getUniformLocation(prog, 'u_res');
-  var uTime   = gl.getUniformLocation(prog, 'u_time');
-  var uMouse  = gl.getUniformLocation(prog, 'u_mouse');
-  var uScroll = gl.getUniformLocation(prog, 'u_scroll');
+  var U = {
+    res: gl.getUniformLocation(prog, 'u_res'),
+    time: gl.getUniformLocation(prog, 'u_time'),
+    mouse: gl.getUniformLocation(prog, 'u_mouse'),
+    cell: gl.getUniformLocation(prog, 'u_cell'),
+    levels: gl.getUniformLocation(prog, 'u_levels')
+  };
+  for (var i = 0; i < RAMP.length; i++) {
+    gl.uniform3fv(gl.getUniformLocation(prog, 'u_ramp[' + i + ']'), hex(RAMP[i]));
+  }
+  gl.uniform1f(U.levels, LEVELS);
 
-  var SCALE = 0.5;
-  var MIN_SCALE = 0.26;
-  var FRAME_MS = 1000 / 30;      // the field drifts slowly; 30fps is plenty
-  var lastDraw = 0;
-  var samples = [], lastAdjust = 0, warmup = 0;
   var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
-  var scroll = 0, scrollTarget = 0;
-  var running = true;
+  var running = true, t0 = performance.now(), last = t0, lastDraw = 0;
+  var FRAME_MS = 1000 / 40;
 
-  function resize(force) {
-    var w = Math.max(1, Math.floor(window.innerWidth  * SCALE));
-    var h = Math.max(1, Math.floor(window.innerHeight * SCALE));
-    if (!force && canvas.width === w && canvas.height === h) return;
-    canvas.width = w;
-    canvas.height = h;
+  function resize() {
+    // CSS-pixel resolution on purpose: the compositor upscales with
+    // image-rendering: pixelated, which keeps the dither cells hard
+    var w = Math.max(2, Math.floor(window.innerWidth));
+    var h = Math.max(2, Math.floor(window.innerHeight));
+    if (canvas.width === w && canvas.height === h) return;
+    canvas.width = w; canvas.height = h;
     gl.viewport(0, 0, w, h);
-    mouse.tx = w * 0.5; mouse.ty = h * 0.55;
+    gl.uniform2f(U.res, w, h);
+    gl.uniform1f(U.cell, window.innerWidth < 640 ? 2 : CELL);
   }
   resize();
-  window.addEventListener('resize', resize, { passive: true });
 
-  window.addEventListener('pointermove', function (e) {
-    mouse.tx = e.clientX * SCALE;
-    mouse.ty = (window.innerHeight - e.clientY) * SCALE;
+  var rt = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt); rt = setTimeout(resize, 130);
   }, { passive: true });
 
-  window.addEventListener('scroll', function () {
-    scrollTarget = window.scrollY / Math.max(1, window.innerHeight);
+  window.addEventListener('pointermove', function (e) {
+    mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
+    mouse.ty = -(e.clientY / window.innerHeight - 0.5) * 2;
   }, { passive: true });
 
   document.addEventListener('visibilitychange', function () {
@@ -245,49 +224,25 @@
     if (running) { last = performance.now(); requestAnimationFrame(frame); }
   });
 
-  // If frames run long even at 30fps, the GPU is struggling with the noise —
-  // shrink the render target rather than dropping the effect. The field is
-  // low-frequency, so a smaller buffer upscales without visible loss.
-  function govern(now, dt) {
-    if (warmup < 30) { warmup++; return; }
-    samples.push(dt);
-    if (samples.length > 60) samples.shift();
-    if (samples.length < 60 || now - lastAdjust < 3000) return;
-
-    var med = samples.slice().sort(function (a, b) { return a - b; })[30];
-    window.__glPerf = { scale: +SCALE.toFixed(2), medianFrameMs: +med.toFixed(1) };
-    if (med > 40 && SCALE > MIN_SCALE) {
-      SCALE = Math.max(MIN_SCALE, SCALE * 0.72);
-      lastAdjust = now; samples.length = 0;
-      resize(true);
-    }
-  }
-
-  var t0 = performance.now();
-  var last = t0;
-
+  var drawn = 0;
   function frame(now) {
     if (!running) return;
-    var dt = Math.min(64, now - last);
-    last = now;
-
-    // critically-damped easing toward targets
-    var k = 1 - Math.pow(0.001, dt / 1000);
-    mouse.x += (mouse.tx - mouse.x) * k * 0.55;
-    mouse.y += (mouse.ty - mouse.y) * k * 0.55;
-    scroll  += (scrollTarget - scroll) * k * 0.6;
-
+    mouse.x += (mouse.tx - mouse.x) * 0.05;
+    mouse.y += (mouse.ty - mouse.y) * 0.05;
     if (now - lastDraw >= FRAME_MS) {
-      lastDraw = now;
-      gl.uniform2f(uRes, canvas.width, canvas.height);
-      gl.uniform1f(uTime, (now - t0) / 1000);
-      gl.uniform2f(uMouse, mouse.x, mouse.y);
-      gl.uniform1f(uScroll, scroll);
+      lastDraw = now; drawn++;
+      gl.uniform1f(U.time, (now - t0) / 1000);
+      gl.uniform2f(U.mouse, mouse.x, mouse.y);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
-      govern(now, dt);
     }
-
+    last = now;
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  window.__dither = {
+    ramp: RAMP,
+    get frames() { return drawn; },
+    get time() { return (performance.now() - t0) / 1000; }
+  };
 })();
