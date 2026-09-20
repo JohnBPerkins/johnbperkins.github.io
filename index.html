@@ -41,8 +41,8 @@
   <a class="nav__brand" href="#top"><span class="nav__mark">JP</span>john&#8203;perkins</a>
   <nav class="nav__links" aria-label="Sections">
     <a href="#about"><i>01</i> about</a>
-    <a href="#work"><i>02</i> work</a>
-    <a href="#builds"><i>03</i> builds</a>
+    <a href="#systems"><i>02</i> systems</a>
+    <a href="#work"><i>03</i> work</a>
     <a href="#stack"><i>04</i> stack</a>
     <a href="#contact"><i>05</i> contact</a>
   </nav>
@@ -99,10 +99,10 @@
 
 <!-- ─────────────────────── metrics ─────────────────────── -->
 <section class="band" aria-label="Key numbers">
-  <div class="band__item reveal"><b data-count="70" data-suffix="k+">0</b><span>documents / day in production</span></div>
-  <div class="band__item reveal" data-delay="70"><b data-count="10" data-suffix="M+">0</b><span>documents PII-redacted</span></div>
-  <div class="band__item reveal" data-delay="140"><b data-count="5" data-suffix="k/s">0</b><span>req/s load-tested, &lt;150ms p95</span></div>
-  <div class="band__item reveal" data-delay="210"><b data-count="90" data-suffix="%">0</b><span>fewer repeat-site LLM calls</span></div>
+  <div class="band__item reveal"><b data-count="1" data-prefix="$" data-suffix="M+">0</b><span>projected annual savings</span></div>
+  <div class="band__item reveal" data-delay="70"><b data-count="70" data-suffix="k+">0</b><span>documents / day in production</span></div>
+  <div class="band__item reveal" data-delay="140"><b data-count="10" data-suffix="M+">0</b><span>documents PII-redacted</span></div>
+  <div class="band__item reveal" data-delay="210"><b data-count="1" data-suffix="k+">0</b><span>vulnerabilities auto-resolved</span></div>
 </section>
 
 <!-- ─────────────────────── 01 index ─────────────────────── -->
@@ -140,9 +140,90 @@
   </ol>
 </section>
 
-<!-- ─────────────────────── 02 work ─────────────────────── -->
+<!-- ─────────────────────── 02 systems ─────────────────────── -->
+<section class="sec" id="systems">
+  <header class="sec__head reveal">
+    <span class="num">02</span><h2>Systems</h2>
+    <span class="sec__note">Built at American Express</span>
+  </header>
+
+  <ol class="systems">
+    <li class="sys reveal">
+      <span class="sys__n">01</span>
+      <div class="sys__id"><h3>KYC extraction</h3></div>
+      <div class="sys__body">
+        <p class="sys__lede"><em>$1M+</em> projected annual savings.</p>
+        <p>Reads customer KYC documents and assembles a structured customer profile, which drives
+           onboarding of existing customers into new products. Turns a document pile into a form
+           that's already filled in.</p>
+        <ul class="tags"><li>Document AI</li><li>Structured extraction</li><li>LLM agents</li></ul>
+      </div>
+    </li>
+    <li class="sys reveal">
+      <span class="sys__n">02</span>
+      <div class="sys__id"><h3>Image preprocessing</h3></div>
+      <div class="sys__body">
+        <p class="sys__lede">Makes unreadable scans readable.</p>
+        <p>Zoom, crop, deblur, rotate and deskew chained per document, so extraction downstream
+           gets a clean page instead of a photograph of one.</p>
+        <ul class="tags"><li>Python</li><li>Computer vision</li><li>OCR</li></ul>
+      </div>
+    </li>
+    <li class="sys reveal">
+      <span class="sys__n">03</span>
+      <div class="sys__id"><h3>Knowledge search</h3></div>
+      <div class="sys__body">
+        <p class="sys__lede">One question, every system.</p>
+        <p>Links internal knowledge sources (GitHub, Confluence, Slack) behind a single retrieval
+           agent, so engineers stop searching three tools to answer one question.</p>
+        <ul class="tags"><li>RAG</li><li>MCP</li><li>Multi-source retrieval</li></ul>
+      </div>
+    </li>
+    <li class="sys reveal">
+      <span class="sys__n">04</span>
+      <div class="sys__id"><h3>Vulnerability remediation</h3></div>
+      <div class="sys__body">
+        <p class="sys__lede"><em>1k+</em> vulnerabilities resolved across the team's services.</p>
+        <p>A coding agent that works cross-repo, so a fix lands as a change rather than a ticket
+           per service.</p>
+        <ul class="tags"><li>Coding agents</li><li>Static analysis</li><li>CI</li></ul>
+      </div>
+    </li>
+    <li class="sys reveal">
+      <span class="sys__n">05</span>
+      <div class="sys__id"><h3>Document processing platform</h3></div>
+      <div class="sys__body">
+        <p class="sys__lede"><em>70k+</em> documents a day. <em>10M+</em> redacted.</p>
+        <p>Filtering, audit logging, multi-format ingestion, and PII detection and redaction on a
+           production platform handling sensitive financial data.</p>
+        <ul class="tags"><li>Python</li><li>PII redaction</li><li>Audit logging</li></ul>
+      </div>
+    </li>
+  </ol>
+
+  <div class="side reveal">
+    <span class="lbl">Side projects</span>
+    <ul>
+      <li>
+        <h4>Real-Time Chat Service</h4>
+        <p>Go WebSockets and NATS pub/sub, stateless nodes on MongoDB.
+           <b>5,000 messages/second at 99.9% delivery.</b></p>
+        <ul class="tags"><li>Go</li><li>NATS</li><li>WebSockets</li><li>MongoDB</li></ul>
+      </li>
+      <li>
+        <h4>URL Shortener</h4>
+        <p>gRPC with a Redis cache over PostgreSQL, rolled out to AWS via Terraform.
+           <b>5k req/s at &lt;150ms p95.</b></p>
+        <ul class="tags"><li>Go</li><li>gRPC</li><li>Redis</li><li>Terraform</li></ul>
+      </li>
+    </ul>
+    <a class="more" href="https://github.com/johnbperkins" target="_blank" rel="noopener">More on GitHub <span>↗</span></a>
+  </div>
+</section>
+
+<!-- ─────────────────────── 03 work ─────────────────────── -->
 <section class="sec" id="work">
-  <header class="sec__head reveal"><span class="num">02</span><h2>Work</h2></header>
+  <header class="sec__head reveal"><span class="num">03</span><h2>Work</h2></header>
 
   <ol class="work">
     <li class="work__row reveal">
@@ -154,9 +235,8 @@
       <div class="work__body">
         <p>Designed and built the team's first end-to-end <em>agentic AI systems</em>: an MCP server,
            multiple LLM agents and workflows, and an agent control plane for orchestration.</p>
-        <p>Shipped document processing end to end (filtering, audit logging, multi-format ingestion,
-           PII detection and redaction) on a platform handling <em>70k+ documents/day</em> of sensitive
-           financial data, <em>10M+ redacted</em> to date.</p>
+        <p>Shipped document processing end to end on the production platform for sensitive
+           financial data, and built the agent systems above on top of it.</p>
         <ul class="tags"><li>Python</li><li>MCP</li><li>LLM agents</li><li>PII redaction</li></ul>
       </div>
     </li>
@@ -227,35 +307,6 @@
       </div>
     </li>
   </ol>
-</section>
-
-<!-- ─────────────────────── 03 builds ─────────────────────── -->
-<section class="sec" id="builds">
-  <header class="sec__head reveal"><span class="num">03</span><h2>Builds</h2></header>
-
-  <div class="builds">
-    <article class="build reveal">
-      <span class="build__n">01</span>
-      <h3>Real-Time Chat Service</h3>
-      <div class="build__metric"><b>5,000</b><span>messages / second at 99.9% delivery</span></div>
-      <p>Horizontally scalable backend on Go WebSockets and NATS pub/sub, supporting 1:1 and group
-         conversations with JWT auth, stateless nodes, MongoDB persistence and a Chi router. Typing indicators, read
-         receipts and cursor-based pagination over the socket protocol.</p>
-      <ul class="tags"><li>Go</li><li>NATS</li><li>WebSockets</li><li>MongoDB</li><li>Docker</li></ul>
-    </article>
-
-    <article class="build reveal" data-delay="100">
-      <span class="build__n">02</span>
-      <h3>URL Shortener</h3>
-      <div class="build__metric"><b>&lt;150<i>ms</i></b><span>p95 at 5k req/s, 99.99% success</span></div>
-      <p>High-throughput service over gRPC with a Redis cache in front of PostgreSQL, containerized with
-         Docker. Cache-aside reads, collision-safe key generation, and one-click AWS rollout through
-         GitHub Actions and Terraform.</p>
-      <ul class="tags"><li>Go</li><li>gRPC</li><li>Redis</li><li>PostgreSQL</li><li>Terraform</li></ul>
-    </article>
-  </div>
-
-  <a class="more reveal" href="https://github.com/johnbperkins" target="_blank" rel="noopener">More on GitHub <span>↗</span></a>
 </section>
 
 <!-- ─────────────────────── 04 stack ─────────────────────── -->

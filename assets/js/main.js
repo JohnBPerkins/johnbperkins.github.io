@@ -31,7 +31,7 @@
   } else {
     items.forEach(function (el) { el.classList.add('is-in'); });
     $$('[data-count]').forEach(function (el) {
-      el.textContent = el.dataset.count + (el.dataset.suffix || '');
+      el.textContent = (el.dataset.prefix || '') + el.dataset.count + (el.dataset.suffix || '');
     });
   }
 
@@ -39,14 +39,21 @@
     if (el.dataset.done) return;
     el.dataset.done = '1';
     var target = parseFloat(el.dataset.count);
+    var prefix = el.dataset.prefix || '';
     var suffix = el.dataset.suffix || '';
+    var final = prefix + target + suffix;
+
+    // Counting 0 -> 1 just shows "$0M+" for most of the run and snaps at the
+    // end, which reads as a bug. Small targets get the reveal without the tick.
+    if (target < 10) { el.textContent = final; return; }
+
     var dur = 1300, t0 = performance.now();
     (function tick(now) {
       var p = Math.min(1, (now - t0) / dur);
       var e = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(target * e) + suffix;
+      el.textContent = prefix + Math.round(target * e) + suffix;
       if (p < 1) requestAnimationFrame(tick);
-      else el.textContent = target + suffix;
+      else el.textContent = final;
     })(t0);
   }
 
