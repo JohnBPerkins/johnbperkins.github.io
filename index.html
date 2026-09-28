@@ -1,403 +1,789 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>John Perkins · Backend &amp; AI Systems Engineer</title>
-<meta name="description" content="John Perkins, backend software engineer building agentic AI systems and distributed infrastructure. AI Engineer II at American Express, Co-Founder &amp; CTO at Notum." />
-<meta name="theme-color" content="#07080b" />
-<link rel="canonical" href="https://johnbperkins.github.io/" />
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>John Perkins · Backend &amp; AI Systems Engineer</title>
+    <meta
+      name="description"
+      content="John Perkins, backend software engineer building agentic AI systems and distributed infrastructure. AI Engineer II at American Express, Co-Founder &amp; CTO at Notum."
+    />
+    <meta name="theme-color" content="#07080b" />
+    <link rel="canonical" href="https://johnbperkins.github.io/" />
 
-<meta property="og:type" content="website" />
-<meta property="og:title" content="John Perkins · Backend &amp; AI Systems Engineer" />
-<meta property="og:description" content="Agentic AI systems and the backend infrastructure underneath them." />
-<meta property="og:url" content="https://johnbperkins.github.io/" />
-<meta property="og:image" content="https://johnbperkins.github.io/assets/og.png" />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="John Perkins. I build agentic AI systems, and the backend that holds them up." />
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:image" content="https://johnbperkins.github.io/assets/og.png" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="John Perkins · Backend &amp; AI Systems Engineer"
+    />
+    <meta
+      property="og:description"
+      content="Agentic AI systems and the backend infrastructure underneath them."
+    />
+    <meta property="og:url" content="https://johnbperkins.github.io/" />
+    <meta
+      property="og:image"
+      content="https://johnbperkins.github.io/assets/og.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="John Perkins. I build agentic AI systems, and the backend that holds them up."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:image"
+      content="https://johnbperkins.github.io/assets/og.png"
+    />
 
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307080b'/%3E%3Ctext x='50' y='70' font-family='monospace' font-size='56' font-weight='700' fill='%23d8ff54' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2307080b'/%3E%3Ctext x='50' y='70' font-family='monospace' font-size='56' font-weight='700' fill='%23d8ff54' text-anchor='middle'%3EJP%3C/text%3E%3C/svg%3E"
+    />
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@300;400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="assets/css/style.css" />
-</head>
-<body>
-
-<div class="bg-stack" aria-hidden="true">
-  <canvas id="gl-bg"></canvas>
-  <div class="bg-fade"></div>
-  <div class="bg-grain"></div>
-</div>
-
-<div class="rail" aria-hidden="true"><span></span></div>
-<a class="skip" href="#main">Skip to content</a>
-
-<header class="nav" id="nav">
-  <a class="nav__brand" href="#top"><span class="nav__mark">JP</span>john&#8203;perkins</a>
-  <nav class="nav__links" aria-label="Sections">
-    <a href="#about"><i>01</i> about</a>
-    <a href="#systems"><i>02</i> systems</a>
-    <a href="#work"><i>03</i> work</a>
-    <a href="#stack"><i>04</i> stack</a>
-    <a href="#contact"><i>05</i> contact</a>
-  </nav>
-  <a class="nav__cta" href="assets/files/John_Perkins_Resume.pdf" target="_blank" rel="noopener">resume<span>↗</span></a>
-</header>
-
-<main id="main">
-<span id="top"></span>
-
-<!-- ─────────────────────── hero ─────────────────────── -->
-<section class="hero">
-  <p class="eyebrow reveal"><span class="dot"></span>Phoenix, AZ · available for work</p>
-
-  <h1 class="hero__name">
-    <span class="l"><span>John</span></span>
-    <span class="l"><span>Perkins</span></span>
-  </h1>
-
-  <p class="thesis reveal" data-delay="80">
-    I build agentic AI systems. <em>And&nbsp;the&nbsp;backend that holds them up.</em>
-  </p>
-
-  <div class="meta reveal" data-delay="120">
-    <div class="meta__cell">
-      <span class="lbl">Discipline</span>
-      <p>Backend engineering<br />AI &amp; distributed systems</p>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@300;400&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <noscript
+      ><style>
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      </style></noscript
+    >
+  </head>
+  <body>
+    <div class="bg-stack" aria-hidden="true">
+      <canvas id="gl-bg"></canvas>
+      <div class="bg-fade"></div>
+      <div class="bg-grain"></div>
     </div>
-    <div class="meta__cell">
-      <span class="lbl">Currently</span>
-      <p>AI Engineer II · American&nbsp;Express<br />Co-Founder &amp; CTO · Notum</p>
-    </div>
-    <div class="meta__cell meta__cell--wide">
-      <span class="lbl">Available for</span>
-      <p>Backend and AI infrastructure work, full-time or contract. Grounded retrieval,
-         agents that fail gracefully, services that hold under real load.</p>
-    </div>
-  </div>
 
-  <div class="hero__actions reveal" data-delay="200">
-    <a class="lnk lnk--solid" href="#work">See the work</a>
-    <a class="lnk" href="mailto:john.mc.perkins@gmail.com">Email</a>
-    <a class="lnk" href="https://github.com/johnbperkins" target="_blank" rel="noopener">GitHub</a>
-    <a class="lnk" href="https://linkedin.com/in/johnbperkins" target="_blank" rel="noopener">LinkedIn</a>
-  </div>
+    <div class="rail" aria-hidden="true"><span></span></div>
+    <a class="skip" href="#main">Skip to content</a>
 
-  <div class="logos reveal" data-delay="260">
-    <ul>
-      <li data-logo="assets/logos/american-express.png"><span>American Express</span></li>
-      <li data-logo="assets/logos/arizona-state-university.png"><span>Arizona State University</span></li>
-      <li data-logo="assets/logos/choice-hotels.png"><span>Choice Hotels</span></li>
-    </ul>
-  </div>
-</section>
+    <header class="nav" id="nav">
+      <a class="nav__brand" href="#top"
+        ><span class="nav__mark">JP</span>john&#8203;perkins</a
+      >
+      <nav class="nav__links" aria-label="Sections">
+        <a href="#about"><i>01</i> about</a>
+        <a href="#systems"><i>02</i> systems</a>
+        <a href="#work"><i>03</i> work</a>
+        <a href="#stack"><i>04</i> stack</a>
+        <a href="#contact"><i>05</i> contact</a>
+      </nav>
+      <a
+        class="nav__cta"
+        href="assets/files/John_Perkins_Resume.pdf"
+        target="_blank"
+        rel="noopener"
+        >resume<span>↗</span></a
+      >
+    </header>
 
-<!-- ─────────────────────── metrics ─────────────────────── -->
-<section class="band" aria-label="Key numbers">
-  <div class="band__item reveal"><b data-count="1" data-prefix="$" data-suffix="M+">0</b><span>projected annual savings</span></div>
-  <div class="band__item reveal" data-delay="70"><b data-count="70" data-suffix="k+">0</b><span>documents / day in production</span></div>
-  <div class="band__item reveal" data-delay="140"><b data-count="10" data-suffix="M+">0</b><span>documents PII-redacted</span></div>
-  <div class="band__item reveal" data-delay="210"><b data-count="1" data-suffix="k+">0</b><span>vulnerabilities auto-resolved</span></div>
-</section>
+    <main id="main">
+      <span id="top"></span>
 
-<!-- ─────────────────────── 01 index ─────────────────────── -->
-<section class="sec" id="about">
-  <header class="sec__head reveal"><span class="num">01</span><h2>About</h2></header>
-
-  <p class="statement reveal" data-delay="80">
-    My background is backend and infrastructure. I've built distributed systems in Go, gRPC
-    and WebSockets, running thousands of requests per second on AWS. For the last two years that
-    foundation has gone into AI systems: <em>MCP servers, multi-agent orchestration, GraphRAG
-    retrieval</em>, and the load-bearing plumbing that keeps them honest in production.
-  </p>
-
-  <ol class="caps">
-    <li class="caps__row reveal">
-      <span class="caps__n">01</span>
-      <h3>Agentic systems</h3>
-      <p>MCP servers, ReAct and plan-execute loops, multi-agent workflows, and an agent control plane for orchestration.</p>
-    </li>
-    <li class="caps__row reveal">
-      <span class="caps__n">02</span>
-      <h3>Grounded retrieval</h3>
-      <p>Neo4j knowledge graphs and vector indexes, hybrid OCR ingestion, reranking, and citations you can trace back.</p>
-    </li>
-    <li class="caps__row reveal">
-      <span class="caps__n">03</span>
-      <h3>Infrastructure</h3>
-      <p>Multi-tenant FastAPI on ECS Fargate, schema-per-tenant isolation, SQS + Lambda pipelines, Terraform, CI/CD.</p>
-    </li>
-    <li class="caps__row reveal">
-      <span class="caps__n">04</span>
-      <h3>Security by default</h3>
-      <p>SSO, VPC isolation, rate limiting, PII detection and redaction, OWASP ASVS Level&nbsp;2 compliance.</p>
-    </li>
-  </ol>
-</section>
-
-<!-- ─────────────────────── 02 systems ─────────────────────── -->
-<section class="sec" id="systems">
-  <header class="sec__head reveal">
-    <span class="num">02</span><h2>Systems</h2>
-    <span class="sec__note">Built at American Express</span>
-  </header>
-
-  <ol class="systems">
-    <li class="sys reveal">
-      <span class="sys__n">01</span>
-      <div class="sys__id"><h3>KYC extraction</h3></div>
-      <div class="sys__body">
-        <p class="sys__lede"><em>$1M+</em> projected annual savings.</p>
-        <p>Reads customer KYC documents and assembles a structured customer profile, which drives
-           onboarding of existing customers into new products. Turns a document pile into a form
-           that's already filled in.</p>
-        <ul class="tags"><li>Document AI</li><li>Structured extraction</li><li>LLM agents</li></ul>
-      </div>
-    </li>
-    <li class="sys reveal">
-      <span class="sys__n">02</span>
-      <div class="sys__id"><h3>Image preprocessing</h3></div>
-      <div class="sys__body">
-        <p class="sys__lede">Makes unreadable scans readable.</p>
-        <p>Zoom, crop, deblur, rotate and deskew chained per document, so extraction downstream
-           gets a clean page instead of a photograph of one.</p>
-        <ul class="tags"><li>Python</li><li>Computer vision</li><li>OCR</li></ul>
-      </div>
-    </li>
-    <li class="sys reveal">
-      <span class="sys__n">03</span>
-      <div class="sys__id"><h3>Knowledge search</h3></div>
-      <div class="sys__body">
-        <p class="sys__lede">One question, every system.</p>
-        <p>Links internal knowledge sources (GitHub, Confluence, Slack) behind a single retrieval
-           agent, so engineers stop searching three tools to answer one question.</p>
-        <ul class="tags"><li>RAG</li><li>MCP</li><li>Multi-source retrieval</li></ul>
-      </div>
-    </li>
-    <li class="sys reveal">
-      <span class="sys__n">04</span>
-      <div class="sys__id"><h3>Vulnerability remediation</h3></div>
-      <div class="sys__body">
-        <p class="sys__lede"><em>1k+</em> vulnerabilities resolved across the team's services.</p>
-        <p>A coding agent that works cross-repo, so a fix lands as a change rather than a ticket
-           per service.</p>
-        <ul class="tags"><li>Coding agents</li><li>Static analysis</li><li>CI</li></ul>
-      </div>
-    </li>
-    <li class="sys reveal">
-      <span class="sys__n">05</span>
-      <div class="sys__id"><h3>Document processing platform</h3></div>
-      <div class="sys__body">
-        <p class="sys__lede"><em>70k+</em> documents a day. <em>10M+</em> redacted.</p>
-        <p>Filtering, audit logging, multi-format ingestion, and PII detection and redaction on a
-           production platform handling sensitive financial data.</p>
-        <ul class="tags"><li>Python</li><li>PII redaction</li><li>Audit logging</li></ul>
-      </div>
-    </li>
-  </ol>
-
-  <div class="side reveal">
-    <span class="lbl">Side projects</span>
-    <ul>
-      <li>
-        <h4>Real-Time Chat Service</h4>
-        <p>Go WebSockets and NATS pub/sub, stateless nodes on MongoDB.
-           <b>5,000 messages/second at 99.9% delivery.</b></p>
-        <ul class="tags"><li>Go</li><li>NATS</li><li>WebSockets</li><li>MongoDB</li></ul>
-      </li>
-      <li>
-        <h4>URL Shortener</h4>
-        <p>gRPC with a Redis cache over PostgreSQL, rolled out to AWS via Terraform.
-           <b>5k req/s at &lt;150ms p95.</b></p>
-        <ul class="tags"><li>Go</li><li>gRPC</li><li>Redis</li><li>Terraform</li></ul>
-      </li>
-    </ul>
-    <a class="more" href="https://github.com/johnbperkins" target="_blank" rel="noopener">More on GitHub <span>↗</span></a>
-  </div>
-</section>
-
-<!-- ─────────────────────── 03 work ─────────────────────── -->
-<section class="sec" id="work">
-  <header class="sec__head reveal"><span class="num">03</span><h2>Work</h2></header>
-
-  <ol class="work">
-    <li class="work__row reveal">
-      <span class="work__yr">Since Feb 2026</span>
-      <div class="work__id">
-        <h3>AI Engineer II</h3>
-        <span class="work__org">American Express <i>· contract</i></span>
-      </div>
-      <div class="work__body">
-        <p>Designed and built the team's first end-to-end <em>agentic AI systems</em>: an MCP server,
-           multiple LLM agents and workflows, and an agent control plane for orchestration.</p>
-        <p>Shipped document processing end to end on the production platform for sensitive
-           financial data, and built the agent systems above on top of it.</p>
-        <ul class="tags"><li>Python</li><li>MCP</li><li>LLM agents</li><li>PII redaction</li></ul>
-      </div>
-    </li>
-
-    <li class="work__row reveal">
-      <span class="work__yr">Since Dec 2025</span>
-      <div class="work__id">
-        <h3>Co-Founder &amp; CTO</h3>
-        <span class="work__org"><a href="https://notum.co" target="_blank" rel="noopener">notum.co<span class="ext">↗</span></a> <i>· founding</i></span>
-      </div>
-      <div class="work__body">
-        <p>AI knowledge platform for law firms. Built a <em>ReAct retrieval agent</em> over a Neo4j
-           knowledge graph and vector index, served over streaming SSE.</p>
-        <p>Architected a multi-tenant FastAPI backend on ECS Fargate with schema-per-tenant PostgreSQL
-           isolation, an async SQS + Lambda ingestion pipeline with hybrid OCR at <em>10k+ documents
-           per run</em>, and owned security end to end: WorkOS SSO, VPC isolation, rate limiting,
-           OWASP ASVS Level 2.</p>
-        <ul class="tags"><li>FastAPI</li><li>Neo4j</li><li>GraphRAG</li><li>ECS Fargate</li><li>PostgreSQL</li></ul>
-      </div>
-    </li>
-
-    <li class="work__row reveal">
-      <span class="work__yr">2025</span>
-      <div class="work__id">
-        <h3>Co-Founder</h3>
-        <span class="work__org">Scout <i>· browser agent</i></span>
-      </div>
-      <div class="work__body">
-        <p>Built an LLM agent on a <em>LangGraph plan-execute loop</em>, driving a browser from cleaned
-           DOM snapshots, and cut repeat-site LLM calls by <em>90%</em> by replaying cached action chains
-           keyed to page-state snapshots.</p>
-        <p>Exposed a FastAPI job API with concurrency-capped workers, human-in-the-loop recovery and
-           PostgreSQL-backed state.</p>
-        <ul class="tags"><li>LangGraph</li><li>FastAPI</li><li>PostgreSQL</li></ul>
-      </div>
-    </li>
-
-    <li class="work__row reveal">
-      <span class="work__yr">2023–2025</span>
-      <div class="work__id">
-        <h3>Graduate Researcher</h3>
-        <span class="work__org">ASU · SCAI</span>
-      </div>
-      <div class="work__body">
-        <p class="work__cite">
-          <a href="https://keep.lib.asu.edu/items/201159" target="_blank" rel="noopener">Adversarial
-            Robustness of Classifiers Using Implicit Neural Representations<span class="ext">↗</span></a>
-          <i>M.S. thesis · ASU KEEP · full text under embargo until May 2027</i>
+      <!-- ─────────────────────── hero ─────────────────────── -->
+      <section class="hero">
+        <p class="eyebrow reveal">
+          <span class="dot"></span>Phoenix, AZ · available for work
         </p>
-        <p>Engineered adversarial-attack modules for INR pipelines and built a
-           <em>gradient-approximating surrogate model</em> to craft image-space attacks and
-           benchmark defenses.</p>
-        <ul class="tags"><li>PyTorch</li><li>Adversarial ML</li><li>INR</li></ul>
-      </div>
-    </li>
 
-    <li class="work__row reveal">
-      <span class="work__yr">2023</span>
-      <div class="work__id">
-        <h3>Software Engineer</h3>
-        <span class="work__org">Choice Hotels <i>· intern</i></span>
-      </div>
-      <div class="work__body">
-        <p>Engineered a bidirectional ServiceNow ↔ Jira sync handling <em>300+ tickets/day</em> with webhook
-           ingestion, payload normalization and conflict resolution, cutting resolution time from weeks
-           to days.</p>
-        <ul class="tags"><li>Webhooks</li><li>Systems integration</li></ul>
-      </div>
-    </li>
-  </ol>
-</section>
+        <h1 class="hero__name">
+          <span class="l"><span>John</span></span>
+          <span class="l"><span>Perkins</span></span>
+        </h1>
 
-<!-- ─────────────────────── 04 stack ─────────────────────── -->
-<section class="sec" id="stack">
-  <header class="sec__head reveal"><span class="num">04</span><h2>Stack</h2></header>
+        <p class="thesis reveal" data-delay="80">
+          I build agentic AI systems.
+          <em>And&nbsp;the&nbsp;backend that holds them up.</em>
+        </p>
 
-  <div class="stack">
-    <div class="stack__col reveal">
-      <span class="lbl">Languages</span>
-      <ul><li>Python</li><li>Go</li><li>C++</li><li>Java</li><li>SQL</li><li>Bash</li></ul>
-    </div>
-    <div class="stack__col reveal" data-delay="60">
-      <span class="lbl">AI / Agents</span>
-      <ul><li>LangGraph</li><li>MCP</li><li>RAG</li><li>GraphRAG</li><li>Multi-agent</li><li>PyTorch</li></ul>
-    </div>
-    <div class="stack__col reveal" data-delay="120">
-      <span class="lbl">Frameworks</span>
-      <ul><li>FastAPI</li><li>gRPC</li><li>REST</li><li>WebSockets</li><li>Docker</li><li>Kubernetes</li><li>Terraform</li></ul>
-    </div>
-    <div class="stack__col reveal" data-delay="180">
-      <span class="lbl">Cloud</span>
-      <ul><li>AWS ECS</li><li>Lambda</li><li>SQS</li><li>RDS</li><li>ElastiCache</li><li>S3</li><li>IAM</li></ul>
-    </div>
-    <div class="stack__col reveal" data-delay="240">
-      <span class="lbl">Data</span>
-      <ul><li>PostgreSQL</li><li>Redis</li><li>MongoDB</li><li>Neo4j</li><li>Prometheus</li><li>Grafana</li><li>k6</li></ul>
-    </div>
-  </div>
+        <div class="meta reveal" data-delay="120">
+          <div class="meta__cell">
+            <span class="lbl">Discipline</span>
+            <p>Backend engineering<br />AI &amp; distributed systems</p>
+          </div>
+          <div class="meta__cell">
+            <span class="lbl">Currently</span>
+            <p>
+              AI Engineer II · American&nbsp;Express<br />Co-Founder &amp; CTO ·
+              Notum
+            </p>
+          </div>
+          <div class="meta__cell meta__cell--wide">
+            <span class="lbl">Available for</span>
+            <p>
+              Backend and AI infrastructure work, full-time or contract.
+              Grounded retrieval, agents that fail gracefully, services that
+              hold under real load.
+            </p>
+          </div>
+        </div>
 
-  <div class="edu">
-    <div class="edu__row reveal">
-      <span class="work__yr">May 2025</span>
-      <h3>M.S. Computer Science</h3>
-      <p>Arizona State University · 3.8 GPA<span>Research: adversarial robustness of INR classifiers</span></p>
-    </div>
-    <div class="edu__row reveal" data-delay="80">
-      <span class="work__yr">Dec 2023</span>
-      <h3>B.S. Computer Science</h3>
-      <p>Arizona State University · 3.47 GPA</p>
-    </div>
-  </div>
-</section>
+        <div class="hero__actions reveal" data-delay="200">
+          <a class="lnk lnk--solid" href="#work">See the work</a>
+          <a class="lnk" href="mailto:john.mc.perkins@gmail.com">Email</a>
+          <a
+            class="lnk"
+            href="https://github.com/johnbperkins"
+            target="_blank"
+            rel="noopener"
+            >GitHub</a
+          >
+          <a
+            class="lnk"
+            href="https://linkedin.com/in/johnbperkins"
+            target="_blank"
+            rel="noopener"
+            >LinkedIn</a
+          >
+        </div>
 
-<!-- ─────────────────────── 05 contact ─────────────────────── -->
-<section class="sec sec--contact" id="contact">
-  <header class="sec__head reveal"><span class="num">05</span><h2>Contact</h2></header>
-  <p class="statement reveal" data-delay="60">
-    Building something that has to <em>actually work in production?</em> I'm interested in agentic
-    systems under real traffic, retrieval that stays grounded, and the backends that carry both.
-  </p>
+        <div class="logos reveal" data-delay="260">
+          <ul>
+            <li data-logo="assets/logos/american-express.png">
+              <span>American Express</span>
+            </li>
+            <li data-logo="assets/logos/arizona-state-university.png">
+              <span>Arizona State University</span>
+            </li>
+            <li data-logo="assets/logos/choice-hotels.png">
+              <span>Choice Hotels</span>
+            </li>
+          </ul>
+        </div>
+      </section>
 
-  <div class="contact__mail reveal" data-delay="120">
-    <a class="mailto" href="mailto:john.mc.perkins@gmail.com">john.mc.perkins@gmail.com</a>
-    <button class="copy" type="button" data-copy="john.mc.perkins@gmail.com" aria-live="polite">copy</button>
-  </div>
+      <!-- ─────────────────────── metrics ─────────────────────── -->
+      <section class="band" aria-label="Key numbers">
+        <div class="band__item reveal">
+          <b data-count="1" data-prefix="$" data-suffix="M+">0</b
+          ><span>projected annual savings</span>
+        </div>
+        <div class="band__item reveal" data-delay="70">
+          <b data-count="70" data-suffix="k+">0</b
+          ><span>documents / day in production</span>
+        </div>
+        <div class="band__item reveal" data-delay="140">
+          <b data-count="10" data-suffix="M+">0</b
+          ><span>documents PII-redacted</span>
+        </div>
+        <div class="band__item reveal" data-delay="210">
+          <b data-count="1" data-suffix="k+">0</b
+          ><span>vulnerabilities auto-resolved</span>
+        </div>
+      </section>
 
-  <p class="contact__ask reveal" data-delay="160">
-    Email is fastest. Tell me what you're building and where it's breaking.
-  </p>
+      <!-- ─────────────────────── 01 index ─────────────────────── -->
+      <section class="sec" id="about">
+        <header class="sec__head reveal">
+          <span class="num">01</span>
+          <h2>About</h2>
+        </header>
 
-  <div class="meta reveal" data-delay="200">
-    <div class="meta__cell">
-      <span class="lbl">Based in</span>
-      <p>Phoenix, Arizona<br />Open to relocation</p>
-    </div>
-    <div class="meta__cell">
-      <span class="lbl">Roles</span>
-      <p>Forward-deployed, AI engineering,<br />backend and infrastructure</p>
-    </div>
-    <div class="meta__cell meta__cell--wide">
-      <span class="lbl">Reply time</span>
-      <p>Usually within a couple of hours.</p>
-    </div>
-  </div>
+        <p class="statement reveal" data-delay="80">
+          My background is backend and infrastructure. I've built distributed
+          systems in Go, gRPC and WebSockets, running thousands of requests per
+          second on AWS. For the last two years that foundation has gone into AI
+          systems:
+          <em>MCP servers, multi-agent orchestration, GraphRAG retrieval</em>,
+          and the load-bearing plumbing that keeps them honest in production.
+        </p>
 
-  <ul class="contact__links reveal" data-delay="240">
-    <li><a href="https://github.com/johnbperkins" target="_blank" rel="noopener">GitHub <span>↗</span></a></li>
-    <li><a href="https://linkedin.com/in/johnbperkins" target="_blank" rel="noopener">LinkedIn <span>↗</span></a></li>
-    <li><a href="assets/files/John_Perkins_Resume.pdf" target="_blank" rel="noopener">Resume PDF <span>↗</span></a></li>
-  </ul>
-</section>
+        <ol class="caps">
+          <li class="caps__row reveal">
+            <span class="caps__n">01</span>
+            <h3>Agentic systems</h3>
+            <p>
+              MCP servers, ReAct and plan-execute loops, multi-agent workflows,
+              and an agent control plane for orchestration.
+            </p>
+          </li>
+          <li class="caps__row reveal">
+            <span class="caps__n">02</span>
+            <h3>Grounded retrieval</h3>
+            <p>
+              Neo4j knowledge graphs and vector indexes, hybrid OCR ingestion,
+              reranking, and citations you can trace back.
+            </p>
+          </li>
+          <li class="caps__row reveal">
+            <span class="caps__n">03</span>
+            <h3>Infrastructure</h3>
+            <p>
+              Multi-tenant FastAPI on ECS Fargate, schema-per-tenant isolation,
+              SQS + Lambda pipelines, Terraform, CI/CD.
+            </p>
+          </li>
+          <li class="caps__row reveal">
+            <span class="caps__n">04</span>
+            <h3>Security by default</h3>
+            <p>
+              SSO, VPC isolation, rate limiting, PII detection and redaction,
+              OWASP ASVS Level&nbsp;2 compliance.
+            </p>
+          </li>
+        </ol>
+      </section>
 
-</main>
+      <!-- ─────────────────────── 02 systems ─────────────────────── -->
+      <section class="sec" id="systems">
+        <header class="sec__head reveal">
+          <span class="num">02</span>
+          <h2>Systems</h2>
+        </header>
 
-<footer class="foot">
-  <span>© <span id="year">2026</span> John Perkins</span>
-  <span class="foot__mid">Phoenix, AZ</span>
-  <a href="#top">Top ↑</a>
-</footer>
+        <div class="sys-group reveal">
+          <span class="lbl">At American Express</span>
+        </div>
 
-<script src="assets/js/background.js" defer></script>
-<script src="assets/js/main.js" defer></script>
-</body>
+        <ol class="systems">
+            <li class="sys reveal">
+            <span class="sys__n">01</span>
+            <div class="sys__id"><h3>KYC extraction</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede"><em>$1M+</em> projected annual savings.</p>
+              <p>
+                Reads customer KYC documents and assembles a structured customer
+                profile, which drives onboarding of existing customers into new
+                products. Turns a document pile into a form that's already
+                filled in.
+              </p>
+              <ul class="tags">
+                <li>Document AI</li>
+                <li>Structured extraction</li>
+                <li>LLM agents</li>
+              </ul>
+            </div>
+          </li>
+            <li class="sys reveal">
+            <span class="sys__n">02</span>
+            <div class="sys__id"><h3>Vulnerability remediation</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede">
+                <em>1k+</em> vulnerabilities resolved across the team's
+                services.
+              </p>
+              <p>
+                A coding agent that works cross-repo, so a fix lands as a change
+                rather than a ticket per service.
+              </p>
+              <ul class="tags">
+                <li>Coding agents</li>
+                <li>Static analysis</li>
+                <li>CI</li>
+              </ul>
+            </div>
+          </li>
+            <li class="sys reveal">
+            <span class="sys__n">03</span>
+            <div class="sys__id"><h3>Document processing platform</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede">
+                <em>70k+</em> documents a day. <em>10M+</em> redacted.
+              </p>
+              <p>
+                Filtering, audit logging, multi-format ingestion, and PII
+                detection and redaction on a production platform handling
+                sensitive financial data.
+              </p>
+              <ul class="tags">
+                <li>Python</li>
+                <li>PII redaction</li>
+                <li>Audit logging</li>
+              </ul>
+            </div>
+          </li>
+            <li class="sys reveal">
+            <span class="sys__n">04</span>
+            <div class="sys__id"><h3>Knowledge search</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede">One question, every system.</p>
+              <p>
+                Links internal knowledge sources (GitHub, Confluence, Slack)
+                behind a single retrieval agent, so engineers stop searching
+                three tools to answer one question.
+              </p>
+              <ul class="tags">
+                <li>RAG</li>
+                <li>MCP</li>
+                <li>Multi-source retrieval</li>
+              </ul>
+            </div>
+          </li>
+            <li class="sys reveal">
+            <span class="sys__n">05</span>
+            <div class="sys__id"><h3>Image preprocessing</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede">Makes unreadable scans readable.</p>
+              <p>
+                Zoom, crop, deblur, rotate and deskew chained per document, so
+                extraction downstream gets a clean page instead of a photograph
+                of one.
+              </p>
+              <ul class="tags">
+                <li>Python</li>
+                <li>Computer vision</li>
+                <li>OCR</li>
+              </ul>
+            </div>
+          </li>
+          </ol>
+
+        <div class="sys-group reveal">
+          <span class="lbl">At Notum</span>
+          <p>AI knowledge platform for law firms. Co-founder and CTO.</p>
+        </div>
+
+        <ol class="systems">
+            <li class="sys reveal">
+            <span class="sys__n">06</span>
+            <div class="sys__id"><h3>Grounded retrieval agent</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede">Citations you can trace to the paragraph.</p>
+              <p>
+                A ReAct loop that plans its own hops across a Neo4j knowledge
+                graph and a vector index, streamed over SSE so the answer fills
+                in while the retrieval trace is still running. Built so a lawyer
+                can check the source instead of trusting the model.
+              </p>
+              <ul class="tags">
+                <li>GraphRAG</li>
+                <li>Neo4j</li>
+                <li>ReAct</li>
+                <li>SSE</li>
+              </ul>
+            </div>
+          </li>
+            <li class="sys reveal">
+            <span class="sys__n">07</span>
+            <div class="sys__id"><h3>Ingestion pipeline</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede">
+                <em>100k+</em> documents per run. Everything a firm has, in one
+                pass.
+              </p>
+              <p>
+                Async SQS and Lambda fan-out with hybrid OCR, so a scanned 1980s
+                deposition and a native PDF land in the same graph. Backpressure
+                and retries live at the queue, not in the request path.
+              </p>
+              <ul class="tags">
+                <li>SQS</li>
+                <li>Lambda</li>
+                <li>Hybrid OCR</li>
+              </ul>
+            </div>
+          </li>
+            <li class="sys reveal">
+            <span class="sys__n">08</span>
+            <div class="sys__id"><h3>Tenant isolation</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede">
+                <em>253</em> ASVS Level 2 requirements met. A firm's documents
+                cannot leave the firm.
+              </p>
+              <p>
+                Schema-per-tenant PostgreSQL, VPC-isolated services, WorkOS SSO
+                and rate limiting. For law firms, confidentiality is not a
+                feature of the product, it is the product.
+              </p>
+              <ul class="tags">
+                <li>Multi-tenancy</li>
+                <li>PostgreSQL</li>
+                <li>WorkOS SSO</li>
+                <li>OWASP ASVS L2</li>
+              </ul>
+            </div>
+          </li>
+            <li class="sys reveal">
+            <span class="sys__n">09</span>
+            <div class="sys__id"><h3>Ticket-to-PR pipeline</h3></div>
+            <div class="sys__body">
+              <p class="sys__lede">
+                <em>100+</em> tickets resolved. Five agents, one human merge
+                gate.
+              </p>
+              <p>
+                spec-writer → planner → plan-reviewer → implementer →
+                code-reviewer, each in its own container on a per-issue git
+                worktree, sharing one written contract. Agents open draft PRs and
+                drive CI green; merging stays human, by design.
+              </p>
+              <ul class="tags">
+                <li>Multi-agent</li>
+                <li>Sandboxing</li>
+                <li>CI</li>
+              </ul>
+            </div>
+          </li>
+          </ol>
+
+        <div class="side reveal">
+          <span class="lbl">Side projects</span>
+          <ul>
+            <li>
+              <h4>Real-Time Chat Service</h4>
+              <p>
+                Go WebSockets and NATS pub/sub, stateless nodes on MongoDB.
+                <b>5,000 messages/second at 99.9% delivery.</b>
+              </p>
+              <ul class="tags">
+                <li>Go</li>
+                <li>NATS</li>
+                <li>WebSockets</li>
+                <li>MongoDB</li>
+              </ul>
+            </li>
+            <li>
+              <h4>URL Shortener</h4>
+              <p>
+                gRPC with a Redis cache over PostgreSQL, rolled out to AWS via
+                Terraform. <b>5k req/s at &lt;150ms p95.</b>
+              </p>
+              <ul class="tags">
+                <li>Go</li>
+                <li>gRPC</li>
+                <li>Redis</li>
+                <li>Terraform</li>
+              </ul>
+            </li>
+          </ul>
+          <a
+            class="more"
+            href="https://github.com/johnbperkins"
+            target="_blank"
+            rel="noopener"
+            >More on GitHub <span>↗</span></a
+          >
+        </div>
+      </section>
+
+      <!-- ─────────────────────── 03 work ─────────────────────── -->
+      <section class="sec" id="work">
+        <header class="sec__head reveal">
+          <span class="num">03</span>
+          <h2>Work</h2>
+        </header>
+
+        <ol class="work">
+          <li class="work__row reveal">
+            <span class="work__yr">Since Feb 2026</span>
+            <div class="work__id">
+              <h3>AI Engineer II</h3>
+              <span class="work__org">American Express <i>· contract</i></span>
+            </div>
+            <div class="work__body">
+              <p>
+                Designed and built the team's first end-to-end
+                <em>agentic AI systems</em>: an MCP server, multiple LLM agents
+                and workflows, and an agent control plane for orchestration.
+              </p>
+              <p>
+                Shipped document processing end to end on the production
+                platform for sensitive financial data, and built the agent
+                systems above on top of it.
+              </p>
+              <ul class="tags">
+                <li>Python</li>
+                <li>MCP</li>
+                <li>LLM agents</li>
+                <li>PII redaction</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="work__row reveal">
+            <span class="work__yr">Since Dec 2025</span>
+            <div class="work__id">
+              <h3>Co-Founder &amp; CTO</h3>
+              <span class="work__org"
+                ><a href="https://notum.co" target="_blank" rel="noopener"
+                  >notum.co<span class="ext">↗</span></a
+                >
+                <i>· founding</i></span
+              >
+            </div>
+            <div class="work__body">
+              <p>
+                AI knowledge platform for law firms. I own the platform end to
+                end: retrieval, ingestion, multi-tenancy and security, on a
+                FastAPI backend on ECS Fargate. The four Notum systems above are
+                that work.
+              </p>
+              <ul class="tags">
+                <li>FastAPI</li>
+                <li>Neo4j</li>
+                <li>GraphRAG</li>
+                <li>ECS Fargate</li>
+                <li>PostgreSQL</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="work__row reveal">
+            <span class="work__yr">2025</span>
+            <div class="work__id">
+              <h3>Co-Founder</h3>
+              <span class="work__org">Scout <i>· browser agent</i></span>
+            </div>
+            <div class="work__body">
+              <p>
+                Built an LLM agent on a <em>LangGraph plan-execute loop</em>,
+                driving a browser from cleaned DOM snapshots, and cut
+                repeat-site LLM calls by <em>90%</em> by replaying cached action
+                chains keyed to page-state snapshots.
+              </p>
+              <p>
+                Exposed a FastAPI job API with concurrency-capped workers,
+                human-in-the-loop recovery and PostgreSQL-backed state.
+              </p>
+              <ul class="tags">
+                <li>LangGraph</li>
+                <li>FastAPI</li>
+                <li>PostgreSQL</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="work__row reveal">
+            <span class="work__yr">2023–2025</span>
+            <div class="work__id">
+              <h3>Graduate Researcher</h3>
+              <span class="work__org">ASU · SCAI</span>
+            </div>
+            <div class="work__body">
+              <p class="work__cite">
+                <a
+                  href="https://keep.lib.asu.edu/items/201159"
+                  target="_blank"
+                  rel="noopener"
+                  >Adversarial Robustness of Classifiers Using Implicit Neural
+                  Representations<span class="ext">↗</span></a
+                >
+                <i
+                  >M.S. thesis · ASU KEEP · full text under embargo until May
+                  2027</i
+                >
+              </p>
+              <p>
+                Engineered adversarial-attack modules for INR pipelines and
+                built a <em>gradient-approximating surrogate model</em> to craft
+                image-space attacks and benchmark defenses.
+              </p>
+              <ul class="tags">
+                <li>PyTorch</li>
+                <li>Adversarial ML</li>
+                <li>INR</li>
+              </ul>
+            </div>
+          </li>
+
+          <li class="work__row reveal">
+            <span class="work__yr">2023</span>
+            <div class="work__id">
+              <h3>Software Engineer</h3>
+              <span class="work__org">Choice Hotels <i>· intern</i></span>
+            </div>
+            <div class="work__body">
+              <p>
+                Engineered a bidirectional ServiceNow ↔ Jira sync handling
+                <em>300+ tickets/day</em> with webhook ingestion, payload
+                normalization and conflict resolution, cutting resolution time
+                from weeks to days.
+              </p>
+              <ul class="tags">
+                <li>Webhooks</li>
+                <li>Systems integration</li>
+              </ul>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <!-- ─────────────────────── 04 stack ─────────────────────── -->
+      <section class="sec" id="stack">
+        <header class="sec__head reveal">
+          <span class="num">04</span>
+          <h2>Stack</h2>
+        </header>
+
+        <div class="stack">
+          <div class="stack__col reveal">
+            <span class="lbl">Languages</span>
+            <ul>
+              <li>Python</li>
+              <li>Go</li>
+              <li>C++</li>
+              <li>Java</li>
+              <li>SQL</li>
+              <li>Bash</li>
+            </ul>
+          </div>
+          <div class="stack__col reveal" data-delay="60">
+            <span class="lbl">AI / Agents</span>
+            <ul>
+              <li>LangGraph</li>
+              <li>MCP</li>
+              <li>RAG</li>
+              <li>GraphRAG</li>
+              <li>Multi-agent</li>
+              <li>PyTorch</li>
+            </ul>
+          </div>
+          <div class="stack__col reveal" data-delay="120">
+            <span class="lbl">Frameworks</span>
+            <ul>
+              <li>FastAPI</li>
+              <li>gRPC</li>
+              <li>REST</li>
+              <li>WebSockets</li>
+              <li>Docker</li>
+              <li>Kubernetes</li>
+              <li>Terraform</li>
+            </ul>
+          </div>
+          <div class="stack__col reveal" data-delay="180">
+            <span class="lbl">Cloud</span>
+            <ul>
+              <li>AWS ECS</li>
+              <li>Lambda</li>
+              <li>SQS</li>
+              <li>RDS</li>
+              <li>ElastiCache</li>
+              <li>S3</li>
+              <li>IAM</li>
+            </ul>
+          </div>
+          <div class="stack__col reveal" data-delay="240">
+            <span class="lbl">Data</span>
+            <ul>
+              <li>PostgreSQL</li>
+              <li>Redis</li>
+              <li>MongoDB</li>
+              <li>Neo4j</li>
+              <li>Prometheus</li>
+              <li>Grafana</li>
+              <li>k6</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="edu">
+          <div class="edu__row reveal">
+            <span class="work__yr">May 2025</span>
+            <h3>M.S. Computer Science</h3>
+            <p>
+              Arizona State University · 3.8 GPA<span
+                >Research: adversarial robustness of INR classifiers</span
+              >
+            </p>
+          </div>
+          <div class="edu__row reveal" data-delay="80">
+            <span class="work__yr">Dec 2023</span>
+            <h3>B.S. Computer Science</h3>
+            <p>Arizona State University · 3.47 GPA</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─────────────────────── 05 contact ─────────────────────── -->
+      <section class="sec sec--contact" id="contact">
+        <header class="sec__head reveal">
+          <span class="num">05</span>
+          <h2>Contact</h2>
+        </header>
+        <p class="statement reveal" data-delay="60">
+          Building something that has to
+          <em>actually work in production?</em> I'm interested in agentic
+          systems under real traffic, retrieval that stays grounded, and the
+          backends that carry both.
+        </p>
+
+        <div class="contact__mail reveal" data-delay="120">
+          <a class="mailto" href="mailto:john.mc.perkins@gmail.com"
+            >john.mc.perkins@gmail.com</a
+          >
+          <button
+            class="copy"
+            type="button"
+            data-copy="john.mc.perkins@gmail.com"
+            aria-live="polite"
+          >
+            copy
+          </button>
+        </div>
+
+        <p class="contact__ask reveal" data-delay="160">
+          Email is fastest. Tell me what you're building and where it's
+          breaking.
+        </p>
+
+        <div class="meta reveal" data-delay="200">
+          <div class="meta__cell">
+            <span class="lbl">Based in</span>
+            <p>Phoenix, Arizona<br />Open to relocation</p>
+          </div>
+          <div class="meta__cell">
+            <span class="lbl">Roles</span>
+            <p>
+              Forward-deployed, AI engineering,<br />backend and infrastructure
+            </p>
+          </div>
+          <div class="meta__cell meta__cell--wide">
+            <span class="lbl">Reply time</span>
+            <p>Usually within a couple of hours.</p>
+          </div>
+        </div>
+
+        <ul class="contact__links reveal" data-delay="240">
+          <li>
+            <a
+              href="https://github.com/johnbperkins"
+              target="_blank"
+              rel="noopener"
+              >GitHub <span>↗</span></a
+            >
+          </li>
+          <li>
+            <a
+              href="https://linkedin.com/in/johnbperkins"
+              target="_blank"
+              rel="noopener"
+              >LinkedIn <span>↗</span></a
+            >
+          </li>
+          <li>
+            <a
+              href="assets/files/John_Perkins_Resume.pdf"
+              target="_blank"
+              rel="noopener"
+              >Resume PDF <span>↗</span></a
+            >
+          </li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span>© <span id="year">2026</span> John Perkins</span>
+      <span class="foot__mid">Phoenix, AZ</span>
+      <a href="#top">Top ↑</a>
+    </footer>
+
+    <script src="assets/js/background.js" defer></script>
+    <script src="assets/js/main.js" defer></script>
+  </body>
 </html>
